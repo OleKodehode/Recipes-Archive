@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Recipe Book</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1 id="title">My Recipes</h1>
+      <form id="add-new-container">
+        <input type="text" name="recipe-name" id="recipe-name-container" />
+        <input type="submit" id="add-new-btn" />
+      </form>
+    </header>
+    <main>
+      <section id="filters"></section>
+      <section id="recipes-container"></section>
+    </main>
+    <dialog id="add-new-dialog"></dialog>
+    <dialog id="delete-dialog"></dialog>
+  </body>
+</html>

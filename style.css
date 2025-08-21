@@ -1,0 +1,143 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --text: hsl(0, 0%, 90%);
+  --text-alt: hsl(0, 0%, 80%);
+  --background: hsl(300, 15%, 5%);
+  --cards: hsl(30, 100%, 75%);
+  --card-input: hsl(30, 100%, 70%);
+  --card-text: hsl(0, 0, 10%);
+  --card-text-alt: hsl(0, 0, 20%);
+  --links: hsl(300, 25%, 10%);
+}
+
+body {
+  background-color: var(--background);
+}
+
+#title {
+  text-align: center;
+  margin: 1em 0;
+  color: var(--text);
+}
+
+main {
+  display: grid;
+  place-content: center;
+  width: 80svh;
+  margin: 0 auto;
+}
+
+#add-new-container {
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  gap: 2em;
+}
+
+#add-new-btn {
+  padding: 1em;
+  border-radius: 5px;
+  background-color: beige;
+}
+
+#recipe-name-container {
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid white;
+  width: 20em;
+  height: 2.5em;
+  padding: 0.2em;
+  color: white;
+}
+
+#recipe-name-container:focus {
+  border-bottom: 3px solid beige;
+  outline: none;
+}
+
+#recipes-container {
+  margin-top: 2em;
+  color: var(--card-text);
+}
+
+.recipe-card {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column nowrap;
+  gap: 1.5em;
+  width: 100%;
+  padding: 1em;
+  background-color: var(--cards);
+  border-radius: 25px;
+  color: var(--card-text);
+  min-width: 70svh;
+}
+
+.recipe-type {
+  position: absolute;
+  top: 0.2em;
+  left: 1em;
+  color: var(--card-text-alt);
+  font-style: italic;
+}
+
+.recipe-name {
+  background-color: var(--card-input);
+  border-radius: 5px;
+  border: none;
+  border-bottom: 2px solid var(--card-text);
+  width: 20em;
+  height: 2.5em;
+  padding: 0.5em;
+  color: var(--card-text);
+  transition: all 0.2s ease-in;
+  margin-top: 2em;
+}
+
+.recipe-name:focus {
+  border-bottom: 3px solid var(--card-text);
+  outline: 2px solid var(--card-text);
+  font-weight: bold;
+}
+
+dialog {
+  display: none;
+  position: fixed;
+}
+
+ul {
+  list-style-type: none;
+  display: grid;
+  place-content: center;
+  margin-top: 0.5em;
+  gap: 0.2em;
+}
+
+summary {
+  font-size: 1.25em;
+}
+
+summary:hover {
+  cursor: pointer;
+  text-shadow: 0.2px 0.2px black;
+}
+
+a,
+a:active,
+a:visited {
+  text-decoration: none;
+  color: var(--links);
+  transition: all 0.2s ease;
+}
+
+a:hover {
+  text-decoration: underline var(--links) 1px;
+  text-shadow: 0.2px 0.2px var(--background);
+}
