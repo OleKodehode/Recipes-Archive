@@ -8,8 +8,9 @@
   --text: hsl(0, 0%, 90%);
   --text-alt: hsl(0, 0%, 80%);
   --background: hsl(300, 15%, 5%);
-  --cards: hsl(30, 100%, 75%);
-  --card-input: hsl(30, 100%, 70%);
+  --cards: hsl(30, 100%, 70%);
+  --card-input: hsl(30, 100%, 80%);
+  --card-button-hover: hsl(30, 100%, 75%);
   --card-text: hsl(0, 0, 10%);
   --card-text-alt: hsl(0, 0, 20%);
   --links: hsl(300, 25%, 10%);
@@ -19,9 +20,13 @@ body {
   background-color: var(--background);
 }
 
-#title {
+.title {
   text-align: center;
-  margin: 1em 0;
+  margin: 1.5em 0;
+  color: var(--text);
+}
+
+label {
   color: var(--text);
 }
 
@@ -35,8 +40,13 @@ main {
 #add-new-container {
   display: flex;
   align-items: center;
-  justify-self: center;
+  flex-flow: column nowrap;
   gap: 2em;
+}
+
+#add-new-container > div {
+  display: flex;
+  gap: 1em;
 }
 
 #add-new-btn {
@@ -45,7 +55,7 @@ main {
   background-color: beige;
 }
 
-#recipe-name-container {
+.recipe-inputs {
   background-color: transparent;
   border: none;
   border-bottom: 2px solid white;
@@ -55,7 +65,7 @@ main {
   color: white;
 }
 
-#recipe-name-container:focus {
+.recipe-inputs:focus {
   border-bottom: 3px solid beige;
   outline: none;
 }
@@ -107,11 +117,6 @@ main {
   font-weight: bold;
 }
 
-dialog {
-  display: none;
-  position: fixed;
-}
-
 ul {
   list-style-type: none;
   display: grid;
@@ -140,4 +145,88 @@ a:visited {
 a:hover {
   text-decoration: underline var(--links) 1px;
   text-shadow: 0.2px 0.2px var(--background);
+}
+
+.delete-btn {
+  position: absolute;
+  top: 0.5em;
+  right: 0.75em;
+  height: 2em;
+  width: 2em;
+  background-color: var(--card-input);
+  border: none;
+  border-radius: 25px;
+  color: black;
+  font-size: 1.25em;
+}
+
+.delete-btn:hover {
+  cursor: pointer;
+  color: red;
+  text-shadow: 1px 1px 2px black;
+  transform: translateY(-1px);
+  box-shadow: 2px 2px 2px black;
+  background-color: var(--card-button-hover);
+}
+
+.modal {
+  margin: 15% auto;
+  display: grid;
+  place-content: center;
+  gap: 2em;
+  background-color: var(--cards);
+  padding: 2.5em 2em 2em 2em;
+  position: relative;
+  border-radius: 5px;
+}
+
+dialog::backdrop {
+  background-color: hsla(0, 0%, 0%, 0.6);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+
+.close-btn {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  width: 1.5em;
+  height: 1.5em;
+  background-color: var(--card-input);
+}
+
+.close-btn:hover {
+  background-color: var(--card-button-hover);
+  box-shadow: 1px 1px 1px black;
+}
+
+.modal-btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+}
+
+.modal-btns > button {
+  padding: 0.5em;
+  border-radius: 10px;
+  background-color: var(--card-input);
+}
+
+.modal-btns > button:hover {
+  background-color: var(--card-button-hover);
+  transform: translateY(-1px);
+  box-shadow: 1px 1px 1px black;
+}
+
+#new-recipe-form {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1em;
+}
+
+#ingredient-list {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.2em;
 }

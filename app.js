@@ -4,6 +4,8 @@ const addNewRecipeBtn = document.getElementById("add-new-btn");
 const newRecipeInput = document.getElementById("recipe-name-container");
 const newRecipeDialog = document.getElementById("add-new-dialog");
 const deleteRecipeDialog = document.getElementById("delete-dialog");
+const closeBtns = document.querySelectorAll(".close-btn, .cancel-btn"); // close and cancel buttons have the same functionality basically
+const addMoreBtn = document.getElementById("add-more-btn");
 
 // stored in let to allow fetching and replacing the array from LocalStorage
 // recipes are stored as objects with keys: name(str), type(str), ingredients(array of str), link(str)
@@ -11,8 +13,8 @@ let recipes = [
   {
     name: "test",
     type: "middag",
-    ingredients: ["Tomat", "Ost", "Fløte"],
     link: "https://www.tastyrecipes.com/pancakes",
+    id: crypto.randomUUID(),
   },
 ];
 let filters = null; // Switching the value of this variable in code
@@ -22,8 +24,26 @@ inputForm.addEventListener("submit", (e) => {
   newRecipeInput.value = "";
 });
 
+closeBtns.forEach((button) => {
+  button.addEventListener("click", () => {
+    const dialog = button.closest(".modal");
+    console.log(`${dialog.id} closing`);
+    dialog.close();
+  });
+});
+
+addMoreBtn.addEventListener("click", () => {});
+
 const saveRecipesToStorage = () => {
   localStorage.setItem("recipes", JSON.stringify(recipes));
+};
+
+const openDeleteModal = () => {
+  deleteRecipeDialog.showModal();
+};
+
+const deleteRecipe = () => {
+  const recipeIndex = recipes.indexOf();
 };
 
 const filterRecipes = (recipes) => {};
@@ -46,20 +66,6 @@ const buildPage = (recipes) => {
     typeElemenet.classList.add("recipe-type");
     typeElemenet.textContent = recipe.type;
 
-    const ingredientsElement = document.createElement("details");
-    const ingredientsSummary = document.createElement("summary");
-    const ingredientsList = document.createElement("ul");
-
-    ingredientsSummary.textContent = "Ingredients";
-
-    recipe.ingredients.forEach((ingredient) => {
-      const listItem = document.createElement("li");
-      listItem.textContent = ingredient;
-      ingredientsList.append(listItem);
-    });
-
-    ingredientsElement.append(ingredientsSummary, ingredientsList);
-
     const linkToRecipe = document.createElement("a");
     linkToRecipe.setAttribute("href", recipe.link);
     linkToRecipe.setAttribute("target", "_blank");
@@ -68,12 +74,12 @@ const buildPage = (recipes) => {
       (_, domain) => `Link to recipe @ ${domain}`
     );
 
-    recipeCard.append(
-      nameElement,
-      typeElemenet,
-      ingredientsElement,
-      linkToRecipe
-    );
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "🗑";
+    deleteBtn.classList.add("delete-btn");
+    deleteBtn.addEventListener("click", () => {});
+
+    recipeCard.append(nameElement, typeElemenet, linkToRecipe, deleteBtn);
     recipesContainer.append(recipeCard);
   });
 };
