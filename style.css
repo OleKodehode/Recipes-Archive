@@ -9,6 +9,7 @@
   --text-alt: hsl(0, 0%, 80%);
   --background: hsl(300, 15%, 5%);
   --cards: hsl(30, 100%, 70%);
+  --cards-hover: hsl(30, 100%, 67%);
   --card-input: hsl(30, 100%, 80%);
   --card-button-hover: hsl(30, 100%, 75%);
   --card-text: hsl(0, 0, 10%);
@@ -93,10 +94,15 @@ main {
   min-width: 50svw;
 }
 
+.recipe-card:hover {
+  background-color: var(--cards-hover);
+  box-shadow: inset 2px 2px 6px black;
+}
+
 .recipe-type {
   position: absolute;
-  top: 0.2em;
-  left: 1em;
+  top: 0.5em;
+  left: 1.5em;
   color: var(--card-text-alt);
   font-style: italic;
 }
