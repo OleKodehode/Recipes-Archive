@@ -10,7 +10,7 @@
   <body>
     <header>
       <h1 class="title">My Recipe Archive</h1>
-      <h3 class="title">Save links to your favorite recipes below</h3>
+      <h3 class="title">Copy and save links to your favorite recipes below</h3>
       <form id="add-new-container">
         <div>
           <label for="recipe-name-container">Name:</label>
@@ -32,6 +32,7 @@
             <option value="other">Other</option>
           </select>
         </div>
+        <p class="italic">Please provide a link with at least www. infront</p>
         <div>
           <label for="recipe-link">Link:</label>
           <input
@@ -49,12 +50,6 @@
         <label for="category-select">Filter by category:</label>
         <select name="category-filter" id="category-select">
           <option value="">Show all categories</option>
-          <option value="breakfast">Breakfasts</option>
-          <option value="lunch">Lunches</option>
-          <option value="dinner">Dinners</option>
-          <option value="dessert">Desserts</option>
-          <option value="snacks">Snacks</option>
-          <option value="other">Other</option>
         </select>
         <label for="sort-select">Sort by:</label>
         <select name="sorting" id="sort-select">

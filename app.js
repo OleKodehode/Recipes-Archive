@@ -21,7 +21,6 @@ const linkRegex = /(?:https?:\/\/)?(?:www\.)?([^.]+)\.[^\s]+(?:\/[^\s]*)?/i;
 // stored in let to allow fetching and replacing the array from LocalStorage
 // recipes are stored as objects with keys: name(str), type(str), , link(str), id(crypto.randomUUID())
 let recipes = [];
-let filters = null; // Switching the value of this variable in code
 let recipeToDelete = null; // used for deletions
 let selectedCategory = "";
 let selectedSort = "";
@@ -33,12 +32,17 @@ inputForm.addEventListener("submit", (e) => {
   const formData = new FormData(inputForm);
   const nameInput = formData.get("recipe-name");
   const typeInput = formData.get("recipe-type");
-  const linkInput = formData.get("recipe-link");
+  let linkInput = formData.get("recipe-link").trim();
 
   if (!nameInput || !linkInput) {
     return alert(
       `One or more fields are left empty.\nPlease fill out the form.`
     );
+  }
+
+  // hrefs needs a protocoll, so if there is none, add https://
+  if (!/^https?:\/\//i.test(linkInput)) {
+    linkInput = "https://" + linkInput;
   }
 
   recipes.push({
@@ -147,6 +151,32 @@ const filterRecipes = (recipes) => {
   return filteredRecipes;
 };
 
+const populateCategoryFilter = () => {
+  // to dynamically add in categories to the filter dropdown.
+  // using a new Set to only get unique entries, and destructuring it into an array for easier data handling.
+  const categories = [
+    ...new Set(
+      recipes
+        .map((recipe) => recipe.type)
+        .sort((a, b) => {
+          a.localeCompare(b);
+        })
+    ),
+  ];
+  // make sure the filter by category dropdown always has this option
+  categorySelect.innerHTML = '<option value="">Show all categories</option>';
+
+  categories.forEach((category) => {
+    const categoryOption = document.createElement("option");
+    categoryOption.value = category;
+    categoryOption.textContent =
+      category.charAt(0).toUpperCase() + category.slice(1); // Making sure the category is capitalized.
+    categorySelect.append(categoryOption);
+  });
+
+  categorySelect.value = selectedCategory; // Making sure the currently selected category stays
+};
+
 const buildPage = (recipes) => {
   recipesContainer.replaceChildren();
 
@@ -190,6 +220,7 @@ const renderPage = () => {
 
   if (recipes.length > 0) {
     filterSection.classList.remove("hidden");
+    populateCategoryFilter();
   } else {
     filterSection.classList.add("hidden");
   }

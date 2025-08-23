@@ -265,3 +265,8 @@ select:hover {
   margin: 2em;
   gap: 0.5em;
 }
+
+.italic {
+  color: var(--text-alt);
+  font-style: italic;
+}
