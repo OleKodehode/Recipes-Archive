@@ -33,7 +33,6 @@ label {
 main {
   display: grid;
   place-content: center;
-  width: 80svh;
   margin: 0 auto;
 }
 
@@ -73,6 +72,10 @@ main {
 #recipes-container {
   margin-top: 2em;
   color: var(--card-text);
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.5em;
+  max-width: 80svw;
 }
 
 .recipe-card {
@@ -87,7 +90,7 @@ main {
   background-color: var(--cards);
   border-radius: 25px;
   color: var(--card-text);
-  min-width: 70svh;
+  min-width: 50svw;
 }
 
 .recipe-type {
@@ -171,13 +174,16 @@ a:hover {
 
 .modal {
   margin: 15% auto;
-  display: grid;
   place-content: center;
   gap: 2em;
   background-color: var(--cards);
   padding: 2.5em 2em 2em 2em;
   position: relative;
   border-radius: 5px;
+}
+
+.modal[open] {
+  display: grid;
 }
 
 dialog::backdrop {
@@ -207,13 +213,15 @@ dialog::backdrop {
   gap: 1em;
 }
 
-.modal-btns > button {
+.modal-btns > button,
+#add-new-btn {
   padding: 0.5em;
   border-radius: 10px;
   background-color: var(--card-input);
 }
 
-.modal-btns > button:hover {
+.modal-btns > button:hover,
+#add-new-btn:hover {
   background-color: var(--card-button-hover);
   transform: translateY(-1px);
   box-shadow: 1px 1px 1px black;
@@ -229,4 +237,14 @@ dialog::backdrop {
   display: flex;
   flex-flow: column nowrap;
   gap: 0.2em;
+}
+
+select {
+  background-color: var(--cards);
+  padding: 0.25em 0.75em;
+  border-radius: 10px;
+}
+
+select:hover {
+  background-color: var(--card-button-hover);
 }
