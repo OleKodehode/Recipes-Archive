@@ -53,6 +53,8 @@ main {
   padding: 1em;
   border-radius: 5px;
   background-color: beige;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .recipe-inputs {
@@ -92,6 +94,7 @@ main {
   border-radius: 25px;
   color: var(--card-text);
   min-width: 50svw;
+  transition: all 0.2s ease;
 }
 
 .recipe-card:hover {
@@ -121,26 +124,8 @@ main {
 }
 
 .recipe-name:focus {
-  border-bottom: 3px solid var(--card-text);
   outline: 2px solid var(--card-text);
   font-weight: bold;
-}
-
-ul {
-  list-style-type: none;
-  display: grid;
-  place-content: center;
-  margin-top: 0.5em;
-  gap: 0.2em;
-}
-
-summary {
-  font-size: 1.25em;
-}
-
-summary:hover {
-  cursor: pointer;
-  text-shadow: 0.2px 0.2px black;
 }
 
 a,
@@ -167,6 +152,7 @@ a:hover {
   border-radius: 25px;
   color: black;
   font-size: 1.25em;
+  transition: all 0.2s ease;
 }
 
 .delete-btn:hover {
