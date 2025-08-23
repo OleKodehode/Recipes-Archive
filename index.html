@@ -27,20 +27,43 @@
             <option value="breakfast">Breakfast</option>
             <option value="lunch">Lunch</option>
             <option value="dinner">Dinner</option>
-            <option value="Dessert">Dessert</option>
-            <option value="Snacks">Snacks</option>
-            <option value="Other">Other</option>
+            <option value="dessert">Dessert</option>
+            <option value="snacks">Snacks</option>
+            <option value="other">Other</option>
           </select>
         </div>
         <div>
           <label for="recipe-link">Link:</label>
-          <input type="text" name="recipe-link" class="recipe-inputs" />
+          <input
+            type="text"
+            name="recipe-link"
+            class="recipe-inputs"
+            id="recipe-link"
+          />
         </div>
         <input type="submit" id="add-new-btn" />
       </form>
     </header>
     <main>
-      <section id="filters"></section>
+      <section id="filter-section" class="hidden">
+        <label for="category-select">Filter by category:</label>
+        <select name="category-filter" id="category-select">
+          <option value="">Show all categories</option>
+          <option value="breakfast">Breakfasts</option>
+          <option value="lunch">Lunches</option>
+          <option value="dinner">Dinners</option>
+          <option value="dessert">Desserts</option>
+          <option value="snacks">Snacks</option>
+          <option value="other">Other</option>
+        </select>
+        <label for="sort-select">Sort by:</label>
+        <select name="sorting" id="sort-select">
+          <option value="">---</option>
+          <option value="name-asc">Recipe Name (A -> Z)</option>
+          <option value="name-desc">Recipe Name (Z -> A)</option>
+          <option value="type">Categories</option>
+        </select>
+      </section>
       <section id="recipes-container"></section>
     </main>
     <dialog id="delete-dialog" class="modal" hidden>

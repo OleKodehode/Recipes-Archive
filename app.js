@@ -4,22 +4,27 @@ const inputForm = document.getElementById("add-new-container");
 const addNewRecipeBtn = document.getElementById("add-new-btn");
 const newRecipeNameInput = document.getElementById("recipe-name-container");
 const newRecipeTypeInput = document.getElementById("recipe-types");
-const newRecipeLinkInput = document.getElementsByClassName("recipe-inputs");
+const newRecipeLinkInput = document.getElementById("recipe-link");
 const newRecipeDialog = document.getElementById("add-new-dialog");
 const deleteRecipeDialog = document.getElementById("delete-dialog");
 const closeBtns = document.querySelectorAll(".close-btn, .cancel-btn"); // close and cancel buttons have the same functionality basically
 const confirmBtns = document.querySelectorAll(".confirm-btn");
 const addMoreBtn = document.getElementById("add-more-btn");
 const deleteMsg = document.getElementById("delete-msg");
+const filterSection = document.getElementById("filter-section");
+const categorySelect = document.getElementById("category-select");
+const sortSelect = document.getElementById("sort-select");
 
 // Regex for links
-const linkRegex = /(?:https?:\/\/)?(?:www\.)?([^.]+)\.[^\s]+(?:\/[^\s]*)?/gi;
+const linkRegex = /(?:https?:\/\/)?(?:www\.)?([^.]+)\.[^\s]+(?:\/[^\s]*)?/i;
 
 // stored in let to allow fetching and replacing the array from LocalStorage
 // recipes are stored as objects with keys: name(str), type(str), , link(str), id(crypto.randomUUID())
 let recipes = [];
 let filters = null; // Switching the value of this variable in code
 let recipeToDelete = null; // used for deletions
+let selectedCategory = "";
+let selectedSort = "";
 
 // Evenet listener for the form for adding new recipes to the archive
 inputForm.addEventListener("submit", (e) => {
@@ -77,40 +82,92 @@ confirmBtns.forEach((button) => {
   });
 });
 
+categorySelect.addEventListener("change", (e) => {
+  selectedCategory = e.target.value;
+
+  // Don't show the category in sort if there is a category filter on
+  const categorySortOption = sortSelect.querySelector('option[value="type"]');
+  if (selectedCategory) {
+    categorySortOption.hidden = true;
+    // if category has been chosen in the sort then reset it.
+    if (selectedSort === "type") {
+      selectedSort = "";
+      sortSelect.value = "";
+    }
+  } else {
+    categorySortOption.hidden = false;
+  }
+
+  renderPage();
+});
+
+sortSelect.addEventListener("change", (e) => {
+  selectedSort = e.target.value;
+  renderPage();
+});
+
 const saveRecipesToStorage = () => {
   localStorage.setItem("recipes", JSON.stringify(recipes));
 };
 
 const openDeleteModal = (recipe) => {
   recipeToDelete = recipe.id; // keep track of the recipe ID for deletion. Gets set to null if the user closes the dialog
-  const domainName = recipe.link.match(linkRegex); // to get the domain name again
+  const match = recipe.link.match(linkRegex); // to get the domain name again. Matches with full link as index 0, domain name as index 1
+  const domainName = match ? match[1] : recipe.link;
 
-  deleteMsg.textContent = `Are you sure you want to delete "${recipe.name}" from ${domainName}?`;
+  deleteMsg.textContent = `Are you sure you want to delete the recipe "${recipe.name}"? [Recipe from ${domainName}]`;
   deleteRecipeDialog.showModal();
 };
 
-const filterRecipes = (recipes) => {};
+const filterRecipes = (recipes) => {
+  let filteredRecipes = [...recipes]; //destructuring to make a copy of the recipes array.
+  // check if there is a filter first
+  if (selectedCategory) {
+    filteredRecipes = filteredRecipes.filter(
+      (recipe) => recipe.type === selectedCategory
+    );
+  }
+
+  // sort if there is any sort selected
+  // using localeCompare instead of > / < for handling non-english letters, case sensitivity, and accented letters
+  switch (selectedSort) {
+    case "name-asc":
+      filteredRecipes.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+
+    case "name-desc":
+      filteredRecipes.sort((a, b) => b.name.localeCompare(a.name));
+      break;
+
+    case "type":
+      filteredRecipes.sort((a, b) => a.type.localeCompare(b.type));
+      break;
+  }
+
+  return filteredRecipes;
+};
 
 const buildPage = (recipes) => {
   recipesContainer.replaceChildren();
 
   recipes.forEach((recipe) => {
+    const { name, type, link } = recipe;
     const recipeCard = document.createElement("article");
-    recipeCard.classList.add("recipe-card", recipe.type);
+    recipeCard.classList.add("recipe-card", type);
 
     const nameElement = document.createElement("input");
     nameElement.setAttribute("type", "text");
     nameElement.classList.add("recipe-name");
-    nameElement.value = recipe.name;
+    nameElement.value = name;
 
-    const typeElemenet = document.createElement("p");
-    typeElemenet.classList.add("recipe-type");
-    typeElemenet.textContent = recipe.type;
+    const typeElement = document.createElement("p");
+    typeElement.classList.add("recipe-type");
+    typeElement.textContent = type;
 
     const linkToRecipe = document.createElement("a");
-    linkToRecipe.setAttribute("href", recipe.link);
+    linkToRecipe.setAttribute("href", link);
     linkToRecipe.setAttribute("target", "_blank");
-    linkToRecipe.textContent = recipe.link.replace(
+    linkToRecipe.textContent = link.replace(
       linkRegex,
       (_, domain) => `Link to recipe @ ${domain}`
     );
@@ -122,7 +179,7 @@ const buildPage = (recipes) => {
       openDeleteModal(recipe);
     });
 
-    recipeCard.append(nameElement, typeElemenet, linkToRecipe, deleteBtn);
+    recipeCard.append(nameElement, typeElement, linkToRecipe, deleteBtn);
     recipesContainer.append(recipeCard);
   });
 };
@@ -130,7 +187,14 @@ const buildPage = (recipes) => {
 const renderPage = () => {
   const savedRecipes = localStorage.getItem("recipes");
   if (savedRecipes) recipes = JSON.parse(savedRecipes);
-  buildPage(recipes);
+
+  if (recipes.length > 0) {
+    filterSection.classList.remove("hidden");
+  } else {
+    filterSection.classList.add("hidden");
+  }
+  const processRecipes = filterRecipes(recipes);
+  buildPage(processRecipes);
 };
 
 renderPage();

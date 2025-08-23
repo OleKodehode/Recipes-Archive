@@ -248,3 +248,14 @@ select {
 select:hover {
   background-color: var(--card-button-hover);
 }
+
+#filter-section.hidden {
+  display: none;
+}
+
+#filter-section {
+  display: grid;
+  place-content: center;
+  margin: 2em;
+  gap: 0.5em;
+}
