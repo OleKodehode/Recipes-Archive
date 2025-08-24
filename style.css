@@ -225,12 +225,6 @@ dialog::backdrop {
   gap: 1em;
 }
 
-#ingredient-list {
-  display: flex;
-  flex-flow: column nowrap;
-  gap: 0.2em;
-}
-
 select {
   background-color: var(--cards);
   padding: 0.25em 0.75em;
@@ -291,9 +285,6 @@ select:hover {
 }
 
 .recipe-link-edit {
-  position: absolute;
-  bottom: 1em;
-  left: 32.5%;
   background-color: var(--card-input);
   border-radius: 5px;
   border: none;
@@ -303,7 +294,7 @@ select:hover {
   padding: 0.5em;
   color: var(--card-text);
   transition: all 0.2s ease-in;
-  margin-top: 2em;
+  margin-top: -3em;
 }
 
 .recipe-link-edit:hover {
