@@ -183,11 +183,21 @@ const populateCategoryFilter = () => {
 
 // Debounce function for timeouts, for editing and saving
 function debounce(func, delay) {
-  let timeout;
-  return (...args) => {
+  let timeout, previousArgs, previousThis;
+  const debounced = function (...args) {
+    previousArgs = args;
+    previousThis = this;
     clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), delay);
+    timeout = setTimeout(() => func.apply(previousThis, previousArgs), delay);
   };
+  debounced.flush = function () {
+    clearTimeout(timeout);
+    if (previousArgs) {
+      func.apply(previousThis, previousArgs);
+      previousArgs = previousThis = undefined;
+    }
+  };
+  return debounced;
 }
 
 const updateRecipe = debounce((id, field, value) => {
@@ -226,9 +236,24 @@ const attachEditHandler = (card, recipe) => {
     element.addEventListener("input", (e) =>
       updateRecipe(recipe.id, field, e.target.value)
     );
-    element.addEventListener("blur", (e) =>
-      updateRecipe(recipe.id, field, e.target.value)
-    );
+
+    element.addEventListener("blur", (e) => {
+      const next = e.relatedTarget;
+      const stillEditingInsideCard =
+        next &&
+        e.currentTarget.closest(".recipe-card") ===
+          next.closest(".recipe-card") &&
+        next.matches(".recipe-name, .recipe-type-edit, .recipe-link-edit");
+
+      console.log(next);
+
+      if (stillEditingInsideCard) {
+        return;
+      }
+
+      updateRecipe(recipe.id, field, e.target.value);
+      updateRecipe.flush();
+    });
     element.addEventListener("keydown", (e) => {
       if (e.key === "Enter") element.blur();
       if (e.key === "Escape") revertField(element, recipe[field]);
@@ -249,25 +274,12 @@ const buildPage = (recipes) => {
     nameElement.classList.add("recipe-name");
     nameElement.value = name;
     nameElement.addEventListener("focus", () => {
-      const isEditing = recipeCard.classList.toggle("editing");
-
-      typeEdit.classList.toggle("hidden");
-      linkEdit.classList.toggle("hidden");
-
-      if (isEditing) {
+      // The card should go into edit mode once the name input has been clicked.
+      if (!recipeCard.classList.contains("editing")) {
+        recipeCard.classList.toggle("editing");
+        typeEdit.classList.toggle("hidden");
+        linkEdit.classList.toggle("hidden");
         editBtn.textContent = "💾";
-      } else {
-        editBtn.textContent = "✎";
-        updateRecipe(recipe.id, "name", nameElement.value);
-        updateRecipe(recipe.id, "type", typeEdit.value);
-        updateRecipe(recipe.id, "link", linkEdit.value);
-
-        typeElement.textContent = typeEdit.value;
-        linkToRecipe.href = linkEdit.value;
-        linkToRecipe.textContent = linkEdit.value.replace(
-          linkRegex,
-          (_, domain) => `Link to recipe @ ${domain}`
-        );
       }
     });
 
@@ -323,6 +335,10 @@ const buildPage = (recipes) => {
         updateRecipe(recipe.id, "name", nameElement.value);
         updateRecipe(recipe.id, "type", typeEdit.value);
         updateRecipe(recipe.id, "link", linkEdit.value);
+        updateRecipe.flush();
+
+        console.log(`trying to save category as ${typeEdit.value}`);
+        console.log(`saved as ${recipe.type}`);
 
         typeElement.textContent = typeEdit.value;
         linkToRecipe.href = linkEdit.value;
