@@ -249,8 +249,6 @@ const attachEditHandler = (card, recipe) => {
           next.closest(".recipe-card") &&
         next.matches(".recipe-name, .recipe-type-edit, .recipe-link-edit");
 
-      console.log(next);
-
       if (stillEditingInsideCard) {
         return;
       }
@@ -345,9 +343,6 @@ const buildPage = (recipes) => {
         updateRecipe(recipe.id, "type", typeEdit.value);
         updateRecipe(recipe.id, "link", linkEdit.value);
         updateRecipe.flush();
-
-        console.log(`trying to save category as ${typeEdit.value}`);
-        console.log(`saved as ${recipe.type}`);
 
         typeElement.textContent = typeEdit.value;
         linkToRecipe.href = linkEdit.value;
