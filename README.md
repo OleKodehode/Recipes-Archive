@@ -1,7 +1,7 @@
 
 # Recipe Archive
 
-A simple website/app for archiving recipes you find on the internet, utilizing localstorage.\
+A simple website/app for archiving recipes you find on the internet, utilizing localstorage.
 
 - Recipe name
 - Category;
