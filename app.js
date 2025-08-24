@@ -30,10 +30,10 @@ const recipeCategories = [
 // recipes are stored as objects with keys: name(str), type(str), , link(str), id(crypto.randomUUID())
 let recipes = [];
 let recipeToDelete = null; // used for deletions
-let selectedCategory = "";
-let selectedSort = "";
+let selectedCategory = ""; // for filtering
+let selectedSort = ""; // for sorting
 
-// Evenet listener for the form for adding new recipes to the archive
+// Event listener for the form for adding new recipes to the archive
 inputForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -61,7 +61,7 @@ inputForm.addEventListener("submit", (e) => {
   });
 
   newRecipeNameInput.value = "";
-  newRecipeTypeInput.value = "";
+  newRecipeTypeInput.value = "breakfast";
   newRecipeLinkInput.value = "";
 
   saveRecipesToStorage();
@@ -87,6 +87,7 @@ confirmBtns.forEach((button) => {
       renderPage();
       recipeToDelete = null; // reset the ID after deletion
     } else {
+      // just in case something goes wrong
       deleteRecipeDialog.close();
       return alert("Something went wrong. Please try again.");
     }
@@ -99,6 +100,7 @@ categorySelect.addEventListener("change", (e) => {
 
   // Don't show the category in sort if there is a category filter on
   const categorySortOption = sortSelect.querySelector('option[value="type"]');
+
   if (selectedCategory) {
     categorySortOption.hidden = true;
     // if category has been chosen in the sort then reset it.
@@ -191,6 +193,7 @@ function debounce(func, delay) {
     timeout = setTimeout(() => func.apply(previousThis, previousArgs), delay);
   };
   debounced.flush = function () {
+    // flush property to skip the timeout.
     clearTimeout(timeout);
     if (previousArgs) {
       func.apply(previousThis, previousArgs);
@@ -238,6 +241,7 @@ const attachEditHandler = (card, recipe) => {
     );
 
     element.addEventListener("blur", (e) => {
+      // adding checks to make sure the blur doesn't flush the changes when clicking related items within a card.
       const next = e.relatedTarget;
       const stillEditingInsideCard =
         next &&
@@ -254,6 +258,7 @@ const attachEditHandler = (card, recipe) => {
       updateRecipe(recipe.id, field, e.target.value);
       updateRecipe.flush();
     });
+
     element.addEventListener("keydown", (e) => {
       if (e.key === "Enter") element.blur();
       if (e.key === "Escape") revertField(element, recipe[field]);
@@ -262,13 +267,16 @@ const attachEditHandler = (card, recipe) => {
 };
 
 const buildPage = (recipes) => {
+  // make sure duplicates ain't created. Possibly not that optimal overall, but a quick fix.
   recipesContainer.replaceChildren();
 
+  // I suppose this could have been pulled out into its' own function
   recipes.forEach((recipe) => {
     const { name, type, link } = recipe;
     const recipeCard = document.createElement("article");
     recipeCard.classList.add("recipe-card", type);
 
+    // Name of the recipe - Can be clicked to initiate edit mode
     const nameElement = document.createElement("input");
     nameElement.setAttribute("type", "text");
     nameElement.classList.add("recipe-name");
@@ -319,6 +327,7 @@ const buildPage = (recipes) => {
       openDeleteModal(recipe);
     });
 
+    // Edit button for easy access to editing. Turns into a save button after going into edit mode.
     const editBtn = document.createElement("button");
     editBtn.textContent = "✎";
     editBtn.classList.add("edit-btn");
@@ -368,6 +377,7 @@ const renderPage = () => {
   const savedRecipes = localStorage.getItem("recipes");
   if (savedRecipes) recipes = JSON.parse(savedRecipes);
 
+  // Show the filters if there are recipes. Hide if there are none.
   if (recipes.length > 0) {
     filterSection.classList.remove("hidden");
     populateCategoryFilter();
